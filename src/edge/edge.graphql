@@ -1,0 +1,24 @@
+type Edge {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateEdgeInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateEdgeInput {
+  id: Int!
+}
+
+type Query {
+  edge: [Edge]!
+  edge(id: Int!): Edge
+}
+
+type Mutation {
+  createEdge(createEdgeInput: CreateEdgeInput!): Edge!
+  updateEdge(updateEdgeInput: UpdateEdgeInput!): Edge!
+  removeEdge(id: Int!): Edge
+}
