@@ -1,13 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateEdgeInput } from './dto/create-edge.input';
 import { UpdateEdgeInput } from './dto/update-edge.input';
 import { PrismaClient } from '@prisma/client';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class EdgeService {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(
+    private readonly prisma: PrismaClient,
+    @Inject('LOGGER_SERVICE') private client: ClientProxy,
+  ) {
+    Logger.log('info');
+  }
   create(createEdgeInput: CreateEdgeInput) {
     // Send the object to a RabbitMQ queue
+    this.client.emit('edge_queue', createEdgeInput);
     return this.prisma.edge.create({
       data: {
         ...createEdgeInput,

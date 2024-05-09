@@ -32,6 +32,22 @@
 $ pnpm install
 ```
 
+Install and run the RabbitMQ server [More info](https://www.rabbitmq.com/docs/install-homebrew)
+
+```bash
+$ brew install rabbitmq
+```
+
+Install the postgres
+```bash
+$ docker pull postgres
+```
+
+```bash
+$ docker run --name rabbitmq-nestjs-edge -e POSTGRES_PASSWORD=mypassword -p 5432:5432 -d postgres
+```
+
+
 ## Running the app
 
 ```bash
