@@ -1,24 +1,29 @@
 type Edge {
-  # Example field (placeholder)
-  exampleField: Int
+  id: String
+  created_at: String
+  updated_at: String
+  capacity: String
+  node1_alias: String
+  node2_alias: String
+  edge_peers: String
 }
 
 input CreateEdgeInput {
-  # Example field (placeholder)
-  exampleField: Int
+  node1_alias: String
+  node2_alias: String
 }
 
 input UpdateEdgeInput {
-  id: Int!
+  id: String
 }
 
 type Query {
-  edge: [Edge]!
-  edge(id: Int!): Edge
+  getEdges: [Edge]!
+  getEdge(id: String!): Edge
 }
 
 type Mutation {
   createEdge(createEdgeInput: CreateEdgeInput!): Edge!
   updateEdge(updateEdgeInput: UpdateEdgeInput!): Edge!
-  removeEdge(id: Int!): Edge
+  removeEdge(id: String!): Edge
 }

@@ -12,13 +12,13 @@ export class EdgeResolver {
     return this.edgeService.create(createEdgeInput);
   }
 
-  @Query('edge')
+  @Query('getEdges')
   findAll() {
     return this.edgeService.findAll();
   }
 
-  @Query('edge')
-  findOne(@Args('id') id: number) {
+  @Query('getEdge')
+  findOne(@Args('id') id: string) {
     return this.edgeService.findOne(id);
   }
 
@@ -28,7 +28,7 @@ export class EdgeResolver {
   }
 
   @Mutation('removeEdge')
-  remove(@Args('id') id: number) {
+  remove(@Args('id') id: string) {
     return this.edgeService.remove(id);
   }
 }
