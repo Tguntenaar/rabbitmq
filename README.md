@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[NestJS](https://github.com/nestjs/nest) framework implementing RabbitMQ as a microservice.
 
 ## Installation
 
@@ -32,23 +32,28 @@
 $ pnpm install
 ```
 
-Install and run the RabbitMQ server [More info](https://www.rabbitmq.com/docs/install-homebrew)
+### Install and run the RabbitMQ server [More info](https://www.rabbitmq.com/docs/install-homebrew)
 
 ```bash
 $ brew install rabbitmq
 ```
 
-Install the postgres
+## Running the app
+
+#### Run rabbitmq server
+``` bash
+$ CONF_ENV_FILE="/opt/homebrew/etc/rabbitmq/rabbitmq-env.conf" /opt/homebrew/opt/rabbitmq/sbin/rabbitmq-server
+```
+
+#### Run postgres server via a docker image
 ```bash
 $ docker pull postgres
 ```
-
 ```bash
 $ docker run --name rabbitmq-nestjs-edge -e POSTGRES_PASSWORD=mypassword -p 5432:5432 -d postgres
 ```
 
-
-## Running the app
+### Prisma
 
 ```bash
 # development
