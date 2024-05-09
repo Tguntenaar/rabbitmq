@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { EdgeModule } from './edge/edge.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -13,6 +14,19 @@ import { EdgeModule } from './edge/edge.module';
       typePaths: ['./**/*.graphql'],
     }),
     EdgeModule,
+    ClientsModule.register([
+      {
+        name: 'LOGGER_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://localhost:5672'],
+          queue: 'edge_queue',
+          queueOptions: {
+            durable: false,
+          },
+        },
+      },
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService],
