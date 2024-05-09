@@ -1,27 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEdgeInput } from './dto/create-edge.input';
 import { UpdateEdgeInput } from './dto/update-edge.input';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class EdgeService {
+  constructor(private readonly prisma: PrismaClient) {}
   create(createEdgeInput: CreateEdgeInput) {
     // Send the object to a RabbitMQ queue
-    return 'This action adds a new edge';
+    return this.prisma.edge.create({
+      data: {
+        ...createEdgeInput,
+        capacity: Math.floor(Math.random() * (1000000 - 10000 + 1)) + 10000,
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all edge`;
+    return this.prisma.edge.findMany();
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} edge`;
+    return this.prisma.edge.findUnique({ where: { id } });
   }
 
   update(id: string, updateEdgeInput: UpdateEdgeInput) {
-    return `This action updates a #${id} edge`;
+    return this.prisma.edge.update({
+      where: { id },
+      data: updateEdgeInput,
+    });
   }
 
   remove(id: string) {
-    return `This action removes a #${id} edge`;
+    return this.prisma.edge.delete({ where: { id } });
   }
 }
