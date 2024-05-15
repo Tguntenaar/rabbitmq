@@ -21,7 +21,7 @@ $ docker pull postgres
 
 ## Running the app
 
-Run postgress
+Run postgres
 ```bash
 $ docker run --name rabbitmq-nestjs-edge -e POSTGRES_PASSWORD=mypassword -p 5432:5432 -d postgres
 ```
@@ -31,7 +31,7 @@ Copy the `.env.example` file and call in `.env`. Add the database URL and set th
 Run RabbitMQ server
 
 ``` bash
-docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.13-management
+$ docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.13-management
 ```
 
 Run NestJS
@@ -108,7 +108,7 @@ Query variables
 ```
 </details>
 
-### Prisma
+### NestJS
 
 ```bash
 # development
