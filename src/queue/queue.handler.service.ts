@@ -8,21 +8,21 @@ export class QueueHandler implements OnModuleInit {
   private channelWrapper: ChannelWrapper;
   private readonly logger = new Logger(QueueHandler.name);
   constructor(private readonly prisma: PrismaClient) {
-    const connection = amqp.connect(['amqp://localhost:5672']);
+    const connection = amqp.connect(['amqp://localhost']);
     this.channelWrapper = connection.createChannel();
+    Logger.log('Initialized QueueHandler Service');
   }
 
   public async onModuleInit() {
-    this.logger.log('info');
+    Logger.log('onModuleInit QueueHandler');
     try {
       await this.channelWrapper.addSetup(async (channel: ConfirmChannel) => {
-        await channel.assertQueue('edge_queue', { durable: false });
-        await channel.consume('edge_queue', async (message) => {
+        await channel.assertQueue('edgeQueue', { durable: true });
+        await channel.consume('edgeQueue', async (message) => {
           if (message) {
             const content = JSON.parse(message.content.toString());
-            this.logger.log(content);
             this.logger.log(
-              `New channel between [node1_alias] and [node2_alias] with a \
+              `New channel between ${content.node1_alias} and ${content.node2_alias} with a \
               capacity of [capacity] has been created.`,
             );
             // Update the edge in the database
@@ -39,7 +39,6 @@ export class QueueHandler implements OnModuleInit {
           }
         });
       });
-      console.log('Consumer service started and listening for messages.');
       this.logger.log('Consumer service started and listening for messages.');
     } catch (err) {
       this.logger.error('Error starting the consumer:', err);
