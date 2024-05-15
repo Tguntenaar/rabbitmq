@@ -14,9 +14,9 @@ datasource db {
 }
 
 model Edge {
-  id          String   @id @default(uuid())
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  id          String @id @default(uuid())
+  created_at  String
+  updated_at  String
   capacity    Int
   node1_alias String
   node2_alias String
