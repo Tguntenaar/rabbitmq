@@ -1,7 +1,7 @@
 type Edge {
   id: String
-  created_at: String
-  updated_at: String
+  created_at: String # string field with the date in ISO string format
+  updated_at: String # string field with the date in ISO string format.
   capacity: String
   node1_alias: String
   node2_alias: String
@@ -13,17 +13,15 @@ input CreateEdgeInput {
   node2_alias: String
 }
 
-input UpdateEdgeInput {
+input GetEdgeInput {
   id: String
 }
 
 type Query {
   getEdges: [Edge]!
-  getEdge(id: String!): Edge
+  getEdge(getEdgeInput: GetEdgeInput!): Edge
 }
 
 type Mutation {
   createEdge(createEdgeInput: CreateEdgeInput!): Edge!
-  updateEdge(updateEdgeInput: UpdateEdgeInput!): Edge!
-  removeEdge(id: String!): Edge
 }
