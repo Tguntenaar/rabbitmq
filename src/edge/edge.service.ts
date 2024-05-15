@@ -2,11 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateEdgeInput } from './dto/create-edge.input';
 import { Edge as PrismaEdge, PrismaClient } from '@prisma/client';
 import { PublisherService } from '../queue/publisher.service';
-
-export interface EdgeWithPeers extends PrismaEdge {
-  edge_peers: string;
-}
-
+import { EdgeWithPeers } from './types/edge';
 @Injectable()
 export class EdgeService {
   constructor(
@@ -15,11 +11,9 @@ export class EdgeService {
   ) {
     Logger.log('Initialized EdgeService');
   }
-  create(createEdgeInput: CreateEdgeInput) {
-    // Send the object to a RabbitMQ queue
-    this.queuePublisher.addEdgeToQueue(createEdgeInput);
+  async create(createEdgeInput: CreateEdgeInput): Promise<EdgeWithPeers> {
     const now = new Date().toISOString();
-    return this.prisma.edge.create({
+    const newEdge: PrismaEdge = await this.prisma.edge.create({
       data: {
         ...createEdgeInput,
         capacity: Math.floor(Math.random() * (1000000 - 10000 + 1)) + 10000,
@@ -27,6 +21,15 @@ export class EdgeService {
         updated_at: now,
       },
     });
+
+    // Send the object to a RabbitMQ queue
+    this.queuePublisher.addEdgeToQueue(newEdge);
+
+    return {
+      ...newEdge,
+      // NOTE: These aliases are not updated yet.
+      edge_peers: `${newEdge.node1_alias}-${newEdge.node2_alias}`,
+    };
   }
 
   async findAll(): Promise<EdgeWithPeers[]> {

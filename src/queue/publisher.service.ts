@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import amqp, { ChannelWrapper } from 'amqp-connection-manager';
 import { Channel } from 'amqplib';
-import { CreateEdgeInput } from 'src/edge/dto/create-edge.input';
+import { Edge as PrismaEdge } from '@prisma/client';
 
 @Injectable()
 export class PublisherService {
@@ -16,7 +16,7 @@ export class PublisherService {
     Logger.log('Initialized PublisherService');
   }
 
-  async addEdgeToQueue(edge: CreateEdgeInput) {
+  async addEdgeToQueue(edge: PrismaEdge) {
     try {
       await this.channelWrapper.sendToQueue(
         'edgeQueue',
