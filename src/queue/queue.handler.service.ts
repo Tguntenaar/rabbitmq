@@ -23,7 +23,7 @@ export class QueueHandler implements OnModuleInit {
             const content = JSON.parse(message.content.toString());
             this.logger.log(
               `New channel between ${content.node1_alias} and \
-${content.node2_alias} with a capacity of [capacity] has been created.`,
+${content.node2_alias} with a capacity of ${content.capacity} has been created.`,
             );
             // Update the edge in the database
             await this.prisma.edge.update({
