@@ -14,14 +14,6 @@ A GraphQL API using NestJS that does basic CRUD operations into a Postgres datab
 $ pnpm install
 ```
 
-Install and run the RabbitMQ server on Mac silicon chips 
-
-[Other operating systems](https://www.rabbitmq.com/docs/platforms)
-
-```bash
-$ brew install rabbitmq
-```
-
 Pull postgres server via a docker image
 ```bash
 $ docker pull postgres
@@ -34,10 +26,12 @@ Run postgress
 $ docker run --name rabbitmq-nestjs-edge -e POSTGRES_PASSWORD=mypassword -p 5432:5432 -d postgres
 ```
 
+Copy the `.env.example` file and call in `.env`. Add the database URL and set the correct password.
+
 Run RabbitMQ server
 
 ``` bash
-CONF_ENV_FILE="/opt/homebrew/etc/rabbitmq/rabbitmq-env.conf" /opt/homebrew/opt/rabbitmq/sbin/rabbitmq-server
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.13-management
 ```
 
 Run NestJS
