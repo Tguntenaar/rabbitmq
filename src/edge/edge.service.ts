@@ -1,44 +1,47 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateEdgeInput } from './dto/create-edge.input';
-import { UpdateEdgeInput } from './dto/update-edge.input';
-import { PrismaClient } from '@prisma/client';
-import { ClientProxy } from '@nestjs/microservices';
+import { Edge as PrismaEdge, PrismaClient } from '@prisma/client';
+import { PublisherService } from '../queue/publisher.service';
+
+export interface EdgeWithPeers extends PrismaEdge {
+  edge_peers: string;
+}
 
 @Injectable()
 export class EdgeService {
   constructor(
     private readonly prisma: PrismaClient,
-    @Inject('LOGGER_SERVICE') private client: ClientProxy,
+    private readonly queuePublisher: PublisherService,
   ) {
-    Logger.log('info');
+    Logger.log('Initialized EdgeService');
   }
   create(createEdgeInput: CreateEdgeInput) {
     // Send the object to a RabbitMQ queue
-    this.client.emit('edge_queue', createEdgeInput);
+    this.queuePublisher.addEdgeToQueue(createEdgeInput);
+    const now = new Date().toISOString();
     return this.prisma.edge.create({
       data: {
         ...createEdgeInput,
         capacity: Math.floor(Math.random() * (1000000 - 10000 + 1)) + 10000,
+        created_at: now,
+        updated_at: now,
       },
     });
   }
 
-  findAll() {
-    return this.prisma.edge.findMany();
+  async findAll(): Promise<EdgeWithPeers[]> {
+    const edges = await this.prisma.edge.findMany();
+    return edges.map((edge) => ({
+      ...edge,
+      edge_peers: `${edge.node1_alias}-${edge.node2_alias}`,
+    }));
   }
 
-  findOne(id: string) {
-    return this.prisma.edge.findUnique({ where: { id } });
-  }
-
-  update(id: string, updateEdgeInput: UpdateEdgeInput) {
-    return this.prisma.edge.update({
-      where: { id },
-      data: updateEdgeInput,
-    });
-  }
-
-  remove(id: string) {
-    return this.prisma.edge.delete({ where: { id } });
+  async findOne(id: string): Promise<EdgeWithPeers> {
+    const edge = await this.prisma.edge.findUnique({ where: { id } });
+    return {
+      ...edge,
+      edge_peers: `${edge.node1_alias}-${edge.node2_alias}`,
+    };
   }
 }
