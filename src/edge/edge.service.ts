@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { CreateEdgeInput } from './dto/create-edge.input';
 import { Edge as PrismaEdge, PrismaClient } from '@prisma/client';
 import { PublisherService } from '../queue/publisher.service';
@@ -41,10 +41,23 @@ export class EdgeService {
   }
 
   async findOne(id: string): Promise<EdgeWithPeers> {
-    const edge = await this.prisma.edge.findUnique({ where: { id } });
-    return {
-      ...edge,
-      edge_peers: `${edge.node1_alias}-${edge.node2_alias}`,
-    };
+    try {
+      const edge = await this.prisma.edge.findUnique({ where: { id } });
+      return {
+        ...edge,
+        edge_peers: `${edge.node1_alias}-${edge.node2_alias}`,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'Edge not found',
+        },
+        HttpStatus.FORBIDDEN,
+        {
+          cause: error,
+        },
+      );
+    }
   }
 }
