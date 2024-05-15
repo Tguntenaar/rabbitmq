@@ -45,7 +45,74 @@ Run NestJS
 $ pnpm run start
 ```
 
+
+## Playground instructions
+
 Now open `localhost:3000/graphql` for the graphql playground.
+
+1. Add the queries and mutation
+2. Add the Query variables
+3. Execute!
+<details>
+<summary>
+Queries and Mutation
+</summary>
+
+```graphql
+mutation createEdge($createEdgeInput: CreateEdgeInput!) {
+ 	createEdge(createEdgeInput: $createEdgeInput) {
+    node1_alias
+    node2_alias
+    id
+    created_at
+    updated_at
+  }
+}
+
+query getEdges {
+  getEdges {
+    id
+    node1_alias
+    node2_alias
+    created_at
+    updated_at
+    edge_peers
+	}
+}
+
+query getEdge($getEdgeInput: GetEdgeInput!) {
+  getEdge(getEdgeInput: $getEdgeInput) {
+    id
+    node1_alias
+    node2_alias
+    created_at
+    updated_at
+    edge_peers
+	}
+}
+
+
+```
+</details>
+
+
+<details>
+<summary>
+Query variables
+</summary>
+
+```json
+{
+	"createEdgeInput":  {
+     "node1_alias": "13",
+     "node2_alias": "12"
+  },
+  "getEdgeInput": {
+  	 "id": "e5751d1-1229-4303-9160-daafda770b4a"
+  }
+}
+```
+</details>
 
 ### Prisma
 
