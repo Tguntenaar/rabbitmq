@@ -5,18 +5,13 @@ A GraphQL API using NestJS that does basic CRUD operations into a Postgres datab
 
 ## Prerequisites
 
-- Docker installed
-- Node package manager installed
+- [Docker installed](https://docs.docker.com/get-docker/)
+- Node package manager installed npm, yarn, pnpm
 
 ## Installation
 
 ```bash
 $ pnpm install
-```
-
-Pull postgres server via a docker image
-```bash
-$ docker pull postgres
 ```
 
 ## Running the app
@@ -34,9 +29,13 @@ Run RabbitMQ server
 $ docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.13-management
 ```
 
-Run NestJS
+Open another terminal window and run NestJS
 ```bash
 $ pnpm run start
+```
+or in dev mode
+```bash
+$ pnpm run start:dev
 ```
 
 
